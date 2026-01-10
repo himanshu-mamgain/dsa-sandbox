@@ -58,19 +58,21 @@ export const CURRICULUM: Record<string, Topic> = {
                 id: 'big-o',
                 title: 'Big O Notation',
                 type: 'article',
-                route: 'analysis',
+                route: 'big-o',
                 description: 'Understanding asymptotic analysis and growth rates.'
             },
             {
                 id: 'time-complexity',
                 title: 'Time Complexity',
-                type: 'visualizer',
+                type: 'article',
+                route: 'time-complexity',
                 description: 'Visualize how execution time grows with input size.'
             },
             {
                 id: 'space-complexity',
                 title: 'Space Complexity',
                 type: 'article',
+                route: 'space-complexity',
                 description: 'Memory usage trade-offs in algorithm design.'
             }
         ]

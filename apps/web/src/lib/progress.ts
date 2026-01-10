@@ -1,21 +1,46 @@
-export class ProgressService {
-    private static STORAGE_KEY = 'dsa_progress';
+const API_URL = 'http://localhost:3000';
 
-    static getCompletedIds(): string[] {
-        const stored = localStorage.getItem(this.STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
+export class ProgressService {
+    private static cache: string[] = [];
+    private static initialized = false;
+
+    static async init() {
+        if (this.initialized) return;
+        try {
+            const res = await fetch(`${API_URL}/progress`);
+            if (res.ok) {
+                this.cache = await res.json();
+            }
+        } catch (e) {
+            console.warn("Failed to sync progress with server, using local cache", e);
+            // Fallback to local storage if server fails
+            const stored = localStorage.getItem('dsa_progress_backup');
+            if (stored) this.cache = JSON.parse(stored);
+        }
+        this.initialized = true;
     }
 
-    static markComplete(id: string): void {
-        const ids = this.getCompletedIds();
-        if (!ids.includes(id)) {
-            ids.push(id);
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(ids));
+    static async markComplete(id: string): Promise<void> {
+        // Optimistic update
+        if (!this.cache.includes(id)) {
+            this.cache.push(id);
+            // Backup locally just in case
+            localStorage.setItem('dsa_progress_backup', JSON.stringify(this.cache));
+        }
+
+        try {
+            await fetch(`${API_URL}/progress`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+        } catch (e) {
+            console.error("Failed to save progress to server", e);
         }
     }
 
     static isCompleted(id: string): boolean {
-        return this.getCompletedIds().includes(id);
+        return this.cache.includes(id);
     }
 
     static getTopicProgress(subtopicIds: string[]): number {
@@ -24,3 +49,4 @@ export class ProgressService {
         return Math.round((completedCount / subtopicIds.length) * 100);
     }
 }
+

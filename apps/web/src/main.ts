@@ -4,6 +4,9 @@ import { getTopicsList } from './concepts/curriculum';
 import { RoadmapView } from './views/intro/roadmap';
 import { DefinitionView } from './views/intro/definition';
 import { ImportanceView } from './views/intro/importance';
+import { BigOView } from './views/analysis/big-o';
+import { TimeComplexityView } from './views/analysis/time-complexity';
+import { SpaceComplexityView } from './views/analysis/space-complexity';
 
 interface Song {
   id: string;
@@ -64,6 +67,25 @@ function renderImportance() {
 
 
 
+
+
+function renderBigO() {
+  const app = document.querySelector<HTMLDivElement>('#app')!;
+  app.innerHTML = BigOView;
+  attachCompletionListener();
+}
+
+function renderTimeComplexity() {
+  const app = document.querySelector<HTMLDivElement>('#app')!;
+  app.innerHTML = TimeComplexityView;
+  attachCompletionListener();
+}
+
+function renderSpaceComplexity() {
+  const app = document.querySelector<HTMLDivElement>('#app')!;
+  app.innerHTML = SpaceComplexityView;
+  attachCompletionListener();
+}
 
 function renderAnalysis() {
   const app = document.querySelector<HTMLDivElement>('#app')!;
@@ -255,6 +277,12 @@ function router() {
     renderImportance();
   } else if (hash === 'analysis') {
     renderAnalysis();
+  } else if (hash === 'big-o') {
+    renderBigO();
+  } else if (hash === 'time-complexity') {
+    renderTimeComplexity();
+  } else if (hash === 'space-complexity') {
+    renderSpaceComplexity();
   } else {
     renderDashboard();
   }
@@ -262,5 +290,8 @@ function router() {
 
 // Initial Load
 window.addEventListener('hashchange', router);
-window.addEventListener('load', router);
+window.addEventListener('load', async () => {
+  await ProgressService.init();
+  router();
+});
 

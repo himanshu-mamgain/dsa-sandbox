@@ -3,8 +3,41 @@ import cors from 'cors';
 import { Playlist, Song } from '@dsa-by-doing/dsa';
 import { AIConnector } from '@dsa-by-doing/ai';
 
+import fs from 'fs';
+import path from 'path';
+
 const app = express();
 const port = 3000;
+
+const DATA_DIR = path.join(__dirname, '../../../local_data');
+const PROGRESS_FILE = path.join(DATA_DIR, 'progress.json');
+
+// Ensure data directory exists
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+// Load progress helper
+const loadProgress = (): string[] => {
+    try {
+        if (fs.existsSync(PROGRESS_FILE)) {
+            const data = fs.readFileSync(PROGRESS_FILE, 'utf-8');
+            return JSON.parse(data);
+        }
+    } catch (e) {
+        console.error("Error reading progress:", e);
+    }
+    return [];
+};
+
+// Save progress helper
+const saveProgress = (ids: string[]) => {
+    try {
+        fs.writeFileSync(PROGRESS_FILE, JSON.stringify(ids, null, 2));
+    } catch (e) {
+        console.error("Error writing progress:", e);
+    }
+};
 
 app.use(cors());
 app.use(express.json());
@@ -46,6 +79,23 @@ app.get('/playlist/prev', (req, res) => {
 app.get('/ai/explain/:concept', async (req, res) => {
     const explanation = await ai.explainConcept(req.params.concept);
     res.json({ explanation });
+});
+
+// Progress Endpoints
+app.get('/progress', (req, res) => {
+    res.json(loadProgress());
+});
+
+app.post('/progress', (req, res) => {
+    const { id } = req.body;
+    if (!id) return res.status(400).send("Missing ID");
+
+    const current = loadProgress();
+    if (!current.includes(id)) {
+        current.push(id);
+        saveProgress(current);
+    }
+    res.json(current);
 });
 
 app.listen(port, () => {
