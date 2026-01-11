@@ -1,5 +1,5 @@
 {
-  "name": "dsa-by-doing",
+  "name": "dsa-sandbox",
   "private": true,
   "scripts": {
     "dev": "pnpm -r run dev",

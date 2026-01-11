@@ -1,0 +1,108 @@
+{
+  "topic": "Analysis of Algorithms",
+  "real_world_analogy": "Comparing travel routes. Walking is O(N) (time grows linearly with distance). Flying is like O(1) mixed with a high constant (boarding time). For short distances (small N), walking is faster. For long distances (large N), flying wins. Complexity analysis helps us choose the right vehicle for the journey.",
+  "analysis_of_algorithms": {
+    "time_complexity": "Quantifies the amount of time taken by an algorithm to run as a function of the length of the input.",
+    "space_complexity": "Quantifies the amount of working storage an algorithm needs relative to the input size.",
+    "tradeoffs": "Time-Space Tradeoff: We can often save time by using more memory (e.g., caching/memoization) or save memory by computing values on the fly (slower).",
+    "when_to_use": "Always. Understanding complexity is crucial for scalability. Code that works for 10 users might crash for 10 million.",
+    "when_not_to_use": "Premature optimization. Don't complicate code to save 1ms if the input size will always be small (e.g., N < 50)."
+  },
+  "questions": [
+    {
+      "id": "analysis-linear-vs-binary",
+      "difficulty": "easy",
+      "problem_statement": "Implement both Linear Search and Binary Search to find a target number in a sorted array. Return the number of comparisons made by each algorithm.",
+      "input_format": "A sorted integer array 'arr' and an integer 'target'",
+      "output_format": "JSON object { linear_ops: int, binary_ops: int }",
+      "constraints": "1 <= arr.length <= 1000, Array is sorted ascending",
+      "edge_cases": [
+        "Target is the first element (Best Case Linear)",
+        "Target is the middle element (Best Case Binary)",
+        "Target is not present (Worst Case for both)",
+        "Array has 1 element"
+      ],
+      "test_cases": [
+        {
+          "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 10",
+          "expected_output": "{ \"linear_ops\": 10, \"binary_ops\": 4 }",
+          "description": "Target at the end. Linear scans all. Binary splits ~4 times."
+        },
+        {
+          "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1",
+          "expected_output": "{ \"linear_ops\": 1, \"binary_ops\": 3 }",
+          "description": "Target at the start. Linear wins (O(1))."
+        }
+      ],
+      "visualization": {
+        "data_structure_model": "Array",
+        "states_to_visualize": ["Current Index", "Search Range (Low/High)", "Comparison Count"],
+        "step_events": [
+          "compare_linear",
+          "set_range_binary",
+          "compare_binary",
+          "found"
+        ],
+        "highlight_rules": "Highlight current index being compared. Dim/Fade out indices eliminated by Binary Search."
+      }
+    },
+    {
+      "id": "analysis-amortized-array",
+      "difficulty": "medium",
+      "problem_statement": "Simulate a Dynamic Array (ArrayList/Vector). Start with capacity 2. Insert N elements. When the array is full, double the capacity. Count the total 'copy operations' performed during resizing vs 'insert operations'.",
+      "input_format": "Integer N",
+      "output_format": "Integer (Total cost = inserts + copies)",
+      "constraints": "1 <= N <= 100",
+      "edge_cases": [
+        "N < Initial Capacity",
+        "N = Exact Power of 2 (Trigger resize at end)",
+        "N = Power of 2 + 1 (Trigger resize immediately)"
+      ],
+      "test_cases": [
+        {
+          "input": "5",
+          "expected_output": "11",
+          "description": "Inserts: 5. Resizes: Cap 2->4 (2 copies), Cap 4->8 (4 copies). Total: 5 + 2 + 4 = 11."
+        }
+      ],
+      "visualization": {
+        "data_structure_model": "Dynamic Array (Contiguous Block)",
+        "states_to_visualize": ["Capacity", "Size", "Cost Accumulator"],
+        "step_events": [
+          "insert_O1",
+          "resize_trigger",
+          "allocate_new_buffer",
+          "copy_element",
+          "insert_after_resize"
+        ],
+        "highlight_rules": "Flash RED during resize copying. Green flash on normal insert."
+      }
+    },
+    {
+      "id": "analysis-recursion-tree",
+      "difficulty": "easy",
+      "problem_statement": "Calculate the Nth Fibonacci number using naive recursion. Track the recursion depth and the total number of function calls to visualize O(2^N).",
+      "input_format": "Integer N",
+      "output_format": "JSON object { result: int, total_calls: int, max_depth: int }",
+      "constraints": "0 <= N <= 10 (limited to prevent browser crash)",
+      "edge_cases": ["N=0", "N=1"],
+      "test_cases": [
+        {
+          "input": "4",
+          "expected_output": "{ \"result\": 3, \"total_calls\": 9, \"max_depth\": 4 }",
+          "description": "fib(4) calls fib(3), fib(2)... forming a tree."
+        }
+      ],
+      "visualization": {
+        "data_structure_model": "Tree (Call Stack Visualization)",
+        "states_to_visualize": ["Active Function Calls", "Return Values"],
+        "step_events": [
+          "call_function",
+          "base_case_hit",
+          "return_value"
+        ],
+        "highlight_rules": "Draw edges as calls occur. Fade node color on return. Highlight leaf nodes (Base Cases) in different color."
+      }
+    }
+  ]
+}

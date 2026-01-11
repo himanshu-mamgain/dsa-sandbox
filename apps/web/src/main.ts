@@ -4,9 +4,18 @@ import { getTopicsList } from './concepts/curriculum';
 import { RoadmapView } from './views/intro/roadmap';
 import { DefinitionView } from './views/intro/definition';
 import { ImportanceView } from './views/intro/importance';
-import { BigOView } from './views/analysis/big-o';
+import { BigOView, setupBigOVisualization } from './views/analysis/big-o';
+import { AnalysisIntroductionView } from './views/analysis';
+import { AsymptoticView, AnalysisCasesView, AmortizedView, setupAmortizedViz } from './views/analysis/advanced';
 import { TimeComplexityView } from './views/analysis/time-complexity';
 import { SpaceComplexityView } from './views/analysis/space-complexity';
+import { CountDigitsView, PalindromeView, FactorialView, GcdLcmView, PrimesView } from './views/mathematics';
+import { BitwiseOperatorsView, CheckKthBitView, CountSetBitsView, PowerOfTwoView, OneOddOccurringView } from './views/bit-magic';
+import { RecursionBasicsView, setupRecursionViz } from './views/recursion/basics';
+import { BacktrackingView, setupBacktrackingViz } from './views/recursion/backtracking';
+import { StackView, setupStackViz } from './views/stacks-queues/stack';
+import { QueueView, setupQueueViz } from './views/stacks-queues/queue';
+import { ProfileView, setupProfileListeners } from './views/profile';
 
 interface Song {
   id: string;
@@ -20,8 +29,22 @@ const API_URL = 'http://localhost:3000';
 // ... (fetchPlaylist and other API calls remain the same) ...
 
 import { ProgressService } from './lib/progress';
+// Editor imports removed
 
-// ... (render functions) ...
+// Helper to render view (No Editor)
+function renderGenericView(viewHtml: string) {
+  const app = document.querySelector<HTMLDivElement>('#app')!;
+
+  app.innerHTML = `
+    <div class="content-container" style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+         ${viewHtml}
+    </div>
+  `;
+
+  attachCompletionListener();
+  // Editor setup removed
+}
+
 
 function attachCompletionListener() {
   const btn = document.getElementById('mark-complete-btn');
@@ -69,35 +92,35 @@ function renderImportance() {
 
 
 
+
 function renderBigO() {
-  const app = document.querySelector<HTMLDivElement>('#app')!;
-  app.innerHTML = BigOView;
-  attachCompletionListener();
+  renderGenericView(BigOView);
+  setupBigOVisualization();
 }
+function renderTimeComplexity() { renderGenericView(TimeComplexityView); }
+function renderSpaceComplexity() { renderGenericView(SpaceComplexityView); }
 
-function renderTimeComplexity() {
-  const app = document.querySelector<HTMLDivElement>('#app')!;
-  app.innerHTML = TimeComplexityView;
-  attachCompletionListener();
-}
+function renderCountDigits() { renderGenericView(CountDigitsView); }
+function renderPalindrome() { renderGenericView(PalindromeView); }
+function renderFactorial() { renderGenericView(FactorialView); }
+function renderGcdLcm() { renderGenericView(GcdLcmView); }
+function renderPrimes() { renderGenericView(PrimesView); }
 
-function renderSpaceComplexity() {
+function renderBitwiseOperators() { renderGenericView(BitwiseOperatorsView); }
+function renderCheckKthBit() { renderGenericView(CheckKthBitView); }
+function renderCountSetBits() { renderGenericView(CountSetBitsView); }
+function renderPowerOfTwo() { renderGenericView(PowerOfTwoView); }
+function renderOneOddOccurring() { renderGenericView(OneOddOccurringView); }
+
+function renderProfile() {
   const app = document.querySelector<HTMLDivElement>('#app')!;
-  app.innerHTML = SpaceComplexityView;
-  attachCompletionListener();
+  app.innerHTML = ProfileView;
+  setupProfileListeners();
 }
 
 function renderAnalysis() {
   const app = document.querySelector<HTMLDivElement>('#app')!;
-  app.innerHTML = `
-    <button class="back-button" onclick="location.hash = ''">
-      <span>←</span> Back to Dashboard
-    </button>
-    <div class="content-container">
-        <h1>Analysis of Algorithms</h1>
-        <p>Coming Soon: Interactive Big O Visualizer</p>
-    </div>
-   `;
+  app.innerHTML = AnalysisIntroductionView;
 }
 
 
@@ -149,8 +172,13 @@ function renderDashboard() {
   const dashboardHtml = `
     <div class="dashboard">
       <header>
-        <h1>DSA By Doing</h1>
-        <div class="subtitle">Learn by building real-world systems.</div>
+        <h1>DSA Sandbox</h1>
+        <div class="subtitle">Your Local Learning Companion</div>
+        <div style="margin-top: 1rem;">
+          <button class="secondary-btn" onclick="location.hash = 'profile'">
+             Manage Profile & Settings ⚙️
+          </button>
+        </div>
       </header>
       
       <div class="topic-grid">
@@ -263,7 +291,9 @@ function router() {
     // Refresh topicsList to ensure latest progress
     const currentTopics = getTopicsList();
     const topic = currentTopics.find(t => t.id === topicId);
-    if (topic) {
+    if (topicId === 'analysis') {
+      renderAnalysis();
+    } else if (topic) {
       const app = document.querySelector<HTMLDivElement>('#app')!;
       app.innerHTML = renderTopicDetail(topic);
     }
@@ -283,6 +313,47 @@ function router() {
     renderTimeComplexity();
   } else if (hash === 'space-complexity') {
     renderSpaceComplexity();
+  } else if (hash === 'asymptotic-notations') {
+    renderGenericView(AsymptoticView);
+  } else if (hash === 'analysis-cases') {
+    renderGenericView(AnalysisCasesView);
+  } else if (hash === 'amortized-analysis') {
+    renderGenericView(AmortizedView);
+    setupAmortizedViz();
+  } else if (hash === 'recursion-basics') {
+    renderGenericView(RecursionBasicsView);
+    setupRecursionViz();
+  } else if (hash === 'backtracking') {
+    renderGenericView(BacktrackingView);
+    setupBacktrackingViz();
+  } else if (hash === 'stack-viz') {
+    renderGenericView(StackView);
+    setupStackViz();
+  } else if (hash === 'queue-viz') {
+    renderGenericView(QueueView);
+    setupQueueViz();
+  } else if (hash === 'count-digits') {
+    renderCountDigits();
+  } else if (hash === 'palindrome') {
+    renderPalindrome();
+  } else if (hash === 'factorial') {
+    renderFactorial();
+  } else if (hash === 'gcd-lcm') {
+    renderGcdLcm();
+  } else if (hash === 'primes') {
+    renderPrimes();
+  } else if (hash === 'bitwise-operators') {
+    renderBitwiseOperators();
+  } else if (hash === 'check-kth-bit') {
+    renderCheckKthBit();
+  } else if (hash === 'count-set-bits') {
+    renderCountSetBits();
+  } else if (hash === 'power-of-two') {
+    renderPowerOfTwo();
+  } else if (hash === 'one-odd-occurring') {
+    renderOneOddOccurring();
+  } else if (hash === 'profile') {
+    renderProfile();
   } else {
     renderDashboard();
   }

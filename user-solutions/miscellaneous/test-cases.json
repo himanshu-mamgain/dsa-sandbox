@@ -1,0 +1,12 @@
+[
+  {
+    "input": [5],
+    "expected": 120,
+    "description": "Factorial of 5"
+  },
+  {
+    "input": [3],
+    "expected": 6,
+    "description": "Factorial of 3"
+  }
+]

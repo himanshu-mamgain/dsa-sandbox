@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSA Sandbox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id="app">
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboard-view">
+            <header class="app-header">
+                <div class="header-content">
+                    <div>
+                        <h1>DSA Sandbox</h1>
+                        <div class="subtitle">Your Local Learning Companion</div>
+                    </div>
+                    <div class="header-actions">
+                        <button id="settings-btn" class="icon-btn" title="Settings">⚙️</button>
+                        <button id="profile-btn" class="icon-btn" title="My Progress">👤</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Guide Section -->
+            <section class="guide-panel">
+                <h3><span class="icon">👋</span> How this works</h3>
+                <ol>
+                    <li>Clone this repo to your machine.</li>
+                    <li>Open <code>user-solutions/</code> in your favorite IDE (VS Code, IntelliJ, etc).</li>
+                    <li>Write your code. The sandbox visualizes your logic!</li>
+                </ol>
+            </section>
+
+            <div class="topic-grid" id="topic-grid">
+                <!-- Topics injected by app.js -->
+                 <div class="topic-card">
+                    <div class="card-header">
+                        <h2>Linked List</h2>
+                    </div>
+                    <p style="color: var(--subtext-color); margin-top: 1rem;">
+                        Visualize and master linked lists.
+                    </p>
+                    <div class="subtopics" style="margin-top: 1rem;">
+                        <span style="color: var(--subtext-color); font-size: 0.9rem;">
+                            Start Problem &rarr;
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settings-view" class="view-section settings-panel" style="display: none;">
+            <h2>Workspace Settings</h2>
+            <p style="color: var(--subtext-color); margin-bottom: 2rem;">Configure where your code lives.</p>
+            
+            <div class="form-group">
+                <label for="solutions-dir">Solutions Directory (Relative to visualizer)</label>
+                <input type="text" id="solutions-dir" class="form-control" value="../user-solutions">
+            </div>
+            
+            <div class="form-group">
+                <label for="pref-lang">Preferred Language</label>
+                <select id="pref-lang" class="form-control">
+                    <option value="java">Java</option>
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button id="save-settings" class="icon-btn" style="width: auto; padding: 0 2rem; border-radius: 2rem; background: var(--primary-color);">Save</button>
+                <button onclick="switchView('dashboard')" class="icon-btn" style="width: auto; padding: 0 2rem; border-radius: 2rem;">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Problem View (Mockup) -->
+        <div id="problem-view" class="view-section" style="display: none;">
+            <header class="app-header">
+                <div class="header-content">
+                    <button onclick="switchView('dashboard')" class="icon-btn" style="width: auto; padding: 0 1rem; border-radius: 2rem; gap:0.5rem">
+                        <span>←</span> Back
+                    </button>
+                    <h1>Linked List: Reverse</h1>
+                </div>
+            </header>
+            
+            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 2rem;">
+                <div class="vis-container" style="background: var(--glass-bg); height: 600px; border-radius: 1rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border);">
+                    <div>Visualization Canvas</div>
+                </div>
+                
+                <div class="status-panel" style="background: var(--surface-color); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--glass-border);">
+                    <h3>Status</h3>
+                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 0.5rem; font-family: monospace;">
+                        Waiting for changes...
+                        <br><br>
+                        1. Edit <code>solution.java</code>
+                        <br>
+                        2. Run tests
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

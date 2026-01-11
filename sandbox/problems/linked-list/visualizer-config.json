@@ -1,0 +1,8 @@
+{
+    "type": "linked-list",
+    "nodes": {
+        "shape": "circle",
+        "color": "#8b5cf6"
+    },
+    "animationSpeed": "medium"
+}

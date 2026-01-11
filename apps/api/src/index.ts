@@ -98,6 +98,25 @@ app.post('/progress', (req, res) => {
     res.json(current);
 });
 
+app.post('/files/save', (req, res) => {
+    const { path: filePath, content } = req.body;
+    if (!filePath || content === undefined) {
+        return res.status(400).json({ error: 'Missing path or content' });
+    }
+
+    try {
+        const dir = path.dirname(filePath);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        fs.writeFileSync(filePath, content);
+        res.json({ success: true, path: filePath });
+    } catch (e) {
+        console.error("Save error:", e);
+        res.status(500).json({ error: 'Failed to write file' });
+    }
+});
+
 app.listen(port, () => {
     console.log(`DSA API listening at http://localhost:${port}`);
 });

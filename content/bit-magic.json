@@ -1,0 +1,172 @@
+{
+  "topic": "Bit Magic",
+  "real_world_analogy": "Light switches in a control panel. Each bit is a switch (0=OFF, 1=ON). Bitwise operations allow you to toggle specific switches, check their state, or flip groups of them instantly using 'masks'. It's the most efficient way to control hardware flags or permissions.",
+  "analysis_of_algorithms": {
+    "time_complexity": "Bitwise operations (&, |, ^, ~, <<, >>) typically take O(1) time on modern processors.",
+    "space_complexity": "O(1) auxiliary space is standard, as operations are performed in registers.",
+    "tradeoffs": "Readability vs. Performance. Bit tricks are fast but can be hard to understand/debug.",
+    "when_to_use": "Optimizing space (flags), hardware control, cryptography, and competitive programming optimization.",
+    "when_not_to_use": "High-level business logic where clarity is more important than CPU cycle optimization."
+  },
+  "questions": [
+    {
+      "id": "check-kth-bit",
+      "difficulty": "easy",
+      "problem_statement": "Given a number N and a bit number K, check if the K-th bit of N is set (1) or not (0).",
+      "input_format": "Integers N and K",
+      "output_format": "Boolean (true if set, false otherwise)",
+      "constraints": "1 <= N <= 10^9, 0 <= K <= 31",
+      "edge_cases": [
+        "K=0 (Least Significant Bit)",
+        "K=31 (Most Significant Bit)",
+        "N=0 (All bits 0)"
+      ],
+      "test_cases": [
+        {
+          "input": "4, 0",
+          "expected_output": "false",
+          "description": "4 is 100. 0th bit is 0."
+        },
+        {
+          "input": "4, 2",
+          "expected_output": "true",
+          "description": "4 is 100. 2nd bit is 1."
+        }
+      ],
+      "visualization": {
+        "data_structure_model": "Binary Representation (Row of Boxes)",
+        "states_to_visualize": ["N (Binary)", "Mask (1 << K)", "Result (N & Mask)"],
+        "step_events": [
+          "create_mask",
+          "bitwise_and",
+          "check_result"
+        ],
+        "highlight_rules": "Highlight the K-th bit of N. Show the Mask aligning with that bit."
+      }
+    },
+    {
+      "id": "count-set-bits",
+      "difficulty": "medium",
+      "problem_statement": "Count the total number of set bits (1s) in the binary representation of an integer N.",
+      "input_format": "Integer N",
+      "output_format": "Integer (Count of 1s)",
+      "constraints": "1 <= N <= 10^9",
+      "edge_cases": [
+        "N=0",
+        "N=Maximum Integer (All 1s)"
+      ],
+      "test_cases": [
+        {
+          "input": "6",
+          "expected_output": "2",
+          "description": "6 is 110. Two set bits."
+        },
+        {
+          "input": "13",
+          "expected_output": "3",
+          "description": "13 is 1101. Three set bits."
+        }
+      ],
+      "visualization": {
+        "data_structure_model": "Binary Row",
+        "states_to_visualize": ["Current N", "Operation Count"],
+        "step_events": [
+          "check_lsb",
+          "right_shift",
+          "increment_count",
+          "brian_kernighan_step"
+        ],
+        "highlight_rules": "Flash the bit being removed (n = n & (n-1)) or checked."
+      }
+    },
+    {
+      "id": "power-of-2",
+      "difficulty": "easy",
+      "problem_statement": "Determine if a given non-negative integer N is a power of 2.",
+      "input_format": "Integer N",
+      "output_format": "Boolean",
+      "constraints": "0 <= N <= 10^18",
+      "edge_cases": ["N=0", "N=1"],
+      "test_cases": [
+        {
+          "input": "1",
+          "expected_output": "true",
+          "description": "2^0 = 1"
+        },
+        {
+          "input": "8",
+          "expected_output": "true",
+          "description": "2^3 = 8"
+        },
+        {
+          "input": "6",
+          "expected_output": "false",
+          "description": "6 is 110 (not a power of 2)"
+        }
+      ],
+      "visualization": {
+        "data_structure_model": "Binary Logic",
+        "states_to_visualize": ["N", "N-1", "Result (N & N-1)"],
+        "step_events": [
+          "show_n",
+          "show_n_minus_1",
+          "bitwise_and"
+        ],
+        "highlight_rules": "Highlight how N and N-1 have no common set bits if N is a power of 2."
+      }
+    },
+    {
+      "id": "swap-odd-even-bits",
+      "difficulty": "easy",
+      "problem_statement": "Given an unsigned integer N, swap all odd bits with even bits.",
+      "input_format": "Integer N",
+      "output_format": "Integer (Swapped value)",
+      "constraints": "1 <= N <= 10^9",
+      "edge_cases": ["N=0", "Alternating bits"],
+      "test_cases": [
+        {
+          "input": "23",
+          "expected_output": "43",
+          "description": "23 (00010111) -> 43 (00101011)"
+        }
+      ],
+      "visualization": {
+        "data_structure_model": "Binary Row",
+        "states_to_visualize": ["Original", "Even Masked", "Odd Masked", "Shifted Results", "Final OR"],
+        "step_events": [
+          "mask_even",
+          "mask_odd",
+          "shift_even_right",
+          "shift_odd_left",
+          "combine_or"
+        ],
+        "highlight_rules": "Color code Odd and Even bits differently. Show them moving positions."
+      }
+    },
+    {
+      "id": "bit-difference",
+      "difficulty": "basic",
+      "problem_statement": "You are given two numbers A and B. Count the number of bits needed to be flipped to convert A to B.",
+      "input_format": "Integers A and B",
+      "output_format": "Integer (Count)",
+      "constraints": "1 <= A, B <= 10^9",
+      "edge_cases": ["A=B (0 flips)", "A=0, B=All 1s"],
+      "test_cases": [
+        {
+          "input": "10, 20",
+          "expected_output": "4",
+          "description": "10 (01010) vs 20 (10100). XOR is 11110 (30). 4 set bits."
+        }
+      ],
+      "visualization": {
+        "data_structure_model": "Two Binary Rows",
+        "states_to_visualize": ["A", "B", "A XOR B", "Count"],
+        "step_events": [
+          "xor_operation",
+          "count_set_bits_in_xor"
+        ],
+        "highlight_rules": "Highlight vertical mismatches between A and B."
+      }
+    }
+  ]
+}
